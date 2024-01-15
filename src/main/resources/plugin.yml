@@ -1,0 +1,13 @@
+name: ${artifactId}
+main: cn.daniellee.plugin.lr.LiveRecorder
+version: ${version}
+commands:
+  liverecorder:
+    usage: /<command>
+    aliases: [lr, live, recorder]
+    description: LiveRecorder
+
+permissions:
+  recorder.toggle:
+    default: true
+    description: ability to use toggle command
