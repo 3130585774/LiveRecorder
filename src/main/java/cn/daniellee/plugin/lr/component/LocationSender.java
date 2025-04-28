@@ -14,10 +14,10 @@ public class LocationSender {
 
 	public static void send(Player player, Location pre, Location current) {
 		try {
-			Class clazz = LiveRecorder.getNMSClass("PacketPlayOutEntity$PacketPlayOutEntityLook");
-			long x = new BigDecimal(current.getX()).multiply(new BigDecimal(32)).subtract(new BigDecimal(pre.getX()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
-			long y = new BigDecimal(current.getY()).multiply(new BigDecimal(32)).subtract(new BigDecimal(pre.getY()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
-			long z = new BigDecimal(current.getZ()).multiply(new BigDecimal(32)).subtract(new BigDecimal(pre.getZ()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
+			Class<?> clazz = LiveRecorder.getNMSClass("PacketPlayOutEntity$PacketPlayOutEntityLook");
+			long x = BigDecimal.valueOf(current.getX()).multiply(new BigDecimal(32)).subtract(BigDecimal.valueOf(pre.getX()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
+			long y = BigDecimal.valueOf(current.getY()).multiply(new BigDecimal(32)).subtract(BigDecimal.valueOf(pre.getY()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
+			long z = BigDecimal.valueOf(current.getZ()).multiply(new BigDecimal(32)).subtract(BigDecimal.valueOf(pre.getZ()).multiply(new BigDecimal(32))).multiply(new BigDecimal(128)).longValue();
 
 			byte yaw = (byte) (current.getYaw() * 256.0F / 360.0F);
 			byte pitch = (byte) (current.getPitch() * 256.0F / 360.0F);

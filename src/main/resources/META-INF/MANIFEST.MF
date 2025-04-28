@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: guava-21.0.jar gson-2.8.0.jar spigot-api-1.16.3-R0.1-2020102
+ 5.071724-27.jar commons-lang3-3.8.1.jar snakeyaml-1.26.jar commons-lang
+ -2.6.jar bungeecord-chat-1.16-R0.3.jar
+

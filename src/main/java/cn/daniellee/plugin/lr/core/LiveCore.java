@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,8 @@ public class LiveCore {
             activePlayers.values().stream().filter(i -> !i.isExternal() && !i.getName().equals(LiveRecorder.getInstance().getConfig().getString("setting.recorder-name", "Recorder"))).collect(Collectors.toList()).forEach(i -> players.add(i.getName() + ";" + i.getLastActive() + ";" + serverName));
             msgOut.writeUTF(LiveCore.serverName + ";" + players.size() + ";" + (LiveCore.recorder != null)); // 直播员是否在这个服务器，服务器在线人数
             msgOut.writeUTF(String.join(",", players));
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         player.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -81,7 +83,8 @@ public class LiveCore {
         DataOutputStream msgOut = new DataOutputStream(msgBytes);
         try {
             msgOut.writeUTF("Join");
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         player.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -97,7 +100,8 @@ public class LiveCore {
         DataOutputStream msgOut = new DataOutputStream(msgBytes);
         try {
             msgOut.writeUTF("Leave");
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         player.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -114,7 +118,8 @@ public class LiveCore {
         try {
             msgOut.writeUTF("Change");
             msgOut.writeUTF(name);
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         player.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -131,7 +136,8 @@ public class LiveCore {
         try {
             msgOut.writeUTF("Refresh");
             msgOut.writeUTF(name);
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         player.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -147,7 +153,8 @@ public class LiveCore {
         try {
             msgOut.writeUTF("Target");
             msgOut.writeUTF(activePlayer.getName());
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
         out.writeShort(msgBytes.toByteArray().length);
         out.write(msgBytes.toByteArray());
         recorder.sendPluginMessage(LiveRecorder.getInstance(), "BungeeCord", out.toByteArray());
@@ -171,7 +178,8 @@ public class LiveCore {
             if (LiveRecorder.getInstance().isFirstPerspective()) recorder.setSpectatorTarget(player);
             recordingPlayer = player.getName();
             // 如果不是上个玩家而且没有隐藏摄像头
-            if (!player.getName().equals(lastPlayer) && LiveRecorder.getInstance().showCamera()) player.sendMessage((LiveRecorder.getInstance().getPrefix() + LiveRecorder.getInstance().getConfig().getString("message.recorder-come", "&eCongratulations on your appearance, let's take a look at the camera in front of the camera~")).replace("&", "§"));
+            if (!player.getName().equals(lastPlayer) && LiveRecorder.getInstance().showCamera())
+                player.sendMessage((LiveRecorder.getInstance().getPrefix() + LiveRecorder.getInstance().getConfig().getString("message.recorder-come", "&eCongratulations on your appearance, let's take a look at the camera in front of the camera~")).replace("&", "§"));
             lastPlayer = player.getName();
             // 增加上镜次数
             LiveRecorder.getInstance().getStorage().updatePlayerData(player.getName(), "times", String.valueOf(LiveRecorder.getInstance().getStorage().getPlayerDataByName(player.getName()).getTimes() + 1));
@@ -180,23 +188,55 @@ public class LiveCore {
     }
 
     public static Vector getVectorByFormTo(Location from, Location to) {
-        double x = new BigDecimal(to.getX()).subtract(new BigDecimal(from.getX())).doubleValue();
-        double y = new BigDecimal(to.getY()).subtract(new BigDecimal(from.getY())).doubleValue();
-        double z = new BigDecimal(to.getZ()).subtract(new BigDecimal(from.getZ())).doubleValue();
+        double x = BigDecimal.valueOf(to.getX()).subtract(BigDecimal.valueOf(from.getX())).doubleValue();
+        double y = BigDecimal.valueOf(to.getY()).subtract(BigDecimal.valueOf(from.getY())).doubleValue();
+        double z = BigDecimal.valueOf(to.getZ()).subtract(BigDecimal.valueOf(from.getZ())).doubleValue();
         return new Vector(x, y, z);
     }
 
+//    public static Location getLiveLocation(Location location) {
+//        // 读取镜头角度
+//        double pitch = LiveRecorder.getInstance().getConfig().getDouble("setting.camera-pitch", 45D);
+//        // 读取录制距离
+//        int distance = LiveRecorder.getInstance().getConfig().getInt("setting.camera-distance", 3);
+//        double hypotenuse = new BigDecimal(Math.cos(Math.toRadians(pitch))).multiply(new BigDecimal(distance)).doubleValue();
+//        double angle = location.getYaw() > 0 ? new BigDecimal(360).subtract(new BigDecimal(location.getYaw() % 360)).doubleValue() : - location.getYaw() % 360;
+//        double y = new BigDecimal(location.getY()).add(new BigDecimal(Math.sin(Math.toRadians(pitch))).multiply(new BigDecimal(distance))).doubleValue();
+//        double x = new BigDecimal(location.getX()).subtract(new BigDecimal(Math.sin(Math.toRadians(angle))).multiply(new BigDecimal(hypotenuse))).doubleValue();
+//        double z = new BigDecimal(location.getZ()).subtract(new BigDecimal(Math.cos(Math.toRadians(angle))).multiply(new BigDecimal(hypotenuse))).doubleValue();
+//        //镜头位置
+//       return new Location(location.getWorld(), x, y, z, location.getYaw(), (float) pitch);
+//    }
+
+
     public static Location getLiveLocation(Location location) {
-        // 读取镜头角度
+        Random random = new Random();
+
+        // 读取摄像机的俯仰角度（pitch）和距离
         double pitch = LiveRecorder.getInstance().getConfig().getDouble("setting.camera-pitch", 45D);
-        // 读取录制距离
         int distance = LiveRecorder.getInstance().getConfig().getInt("setting.camera-distance", 3);
-        double hypotenuse = new BigDecimal(Math.cos(Math.toRadians(pitch))).multiply(new BigDecimal(distance)).doubleValue();
-        double angle = location.getYaw() > 0 ? new BigDecimal(360).subtract(new BigDecimal(location.getYaw() % 360)).doubleValue() : - location.getYaw() % 360;
-        double y = new BigDecimal(location.getY()).add(new BigDecimal(Math.sin(Math.toRadians(pitch))).multiply(new BigDecimal(distance))).doubleValue();
-        double x = new BigDecimal(location.getX()).subtract(new BigDecimal(Math.sin(Math.toRadians(angle))).multiply(new BigDecimal(hypotenuse))).doubleValue();
-        double z = new BigDecimal(location.getZ()).subtract(new BigDecimal(Math.cos(Math.toRadians(angle))).multiply(new BigDecimal(hypotenuse))).doubleValue();
-        //镜头位置
-       return new Location(location.getWorld(), x, y, z, location.getYaw(), (float) pitch);
+
+        // 生成一个随机角度（0° ~ 360°），用于在圆周上随机选取位置
+        double randomAngle = random.nextDouble() * 360;
+
+        // 计算水平平面的 XZ 坐标偏移
+        double xOffset = Math.cos(Math.toRadians(randomAngle)) * distance;
+        double zOffset = Math.sin(Math.toRadians(randomAngle)) * distance;
+
+        // 计算 Y 轴高度（根据 pitch 计算）
+        double yOffset = Math.tan(Math.toRadians(pitch)) * distance;
+
+        // 计算相机的新位置
+        double x = location.getX() + xOffset;
+        double y = location.getY() + yOffset;
+        double z = location.getZ() + zOffset;
+
+        // 计算相机的朝向：始终指向 `location`
+        float yaw = (float) (Math.toDegrees(Math.atan2(-xOffset, zOffset))); // 计算相机的旋转角度
+        float finalPitch = (float) -pitch; // 保持摄像机的俯仰角度
+
+        // 返回新位置，朝向目标点
+        return new Location(location.getWorld(), x, y, z, yaw, finalPitch);
     }
+
 }

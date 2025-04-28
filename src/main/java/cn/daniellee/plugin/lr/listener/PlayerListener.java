@@ -48,7 +48,10 @@ public class PlayerListener implements Listener {
 				// 镜头修正
 				if (activePlayer != null) {
 					if (activePlayer.getBeginLocation() == null) activePlayer.setBeginLocation(e.getFrom());
-					double distance = Math.sqrt(new BigDecimal(activePlayer.getBeginLocation().getX()).subtract(new BigDecimal(e.getTo().getX())).pow(2).add(new BigDecimal(activePlayer.getBeginLocation().getZ()).subtract(new BigDecimal(e.getTo().getZ())).pow(2)).add(new BigDecimal(activePlayer.getBeginLocation().getY()).subtract(new BigDecimal(e.getTo().getY())).pow(2)).doubleValue());
+					double dx = activePlayer.getBeginLocation().getX() - e.getTo().getX();
+					double dy = activePlayer.getBeginLocation().getY() - e.getTo().getY();
+					double dz = activePlayer.getBeginLocation().getZ() - e.getTo().getZ();
+					double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 					if (distance > LiveRecorder.getInstance().getConfig().getInt("setting.camera-reset-distance", 50)) {
 						activePlayer.setBeginLocation(e.getTo());
 						LiveCore.recorder.teleport(LiveCore.getLiveLocation(e.getTo()));

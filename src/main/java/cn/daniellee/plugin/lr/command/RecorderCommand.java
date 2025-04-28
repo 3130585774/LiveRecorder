@@ -113,6 +113,7 @@ public class RecorderCommand implements CommandExecutor {
         targetHelp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(targetText).color(ChatColor.BLUE).create()));
         commandSender.spigot().sendMessage(targetHelp);
 
+
         String timeText = LiveRecorder.getInstance().getConfig().getString("help.time", "&eSet the time each player is broadcast(unit: second).").replace("&", "§");
         TextComponent timeHelp = new TextComponent("/lr time  " + timeText);
         timeHelp.setColor(ChatColor.GRAY);
@@ -133,6 +134,7 @@ public class RecorderCommand implements CommandExecutor {
         resetHelp.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/lr reset"));
         resetHelp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(resetText).color(ChatColor.BLUE).create()));
         commandSender.spigot().sendMessage(resetHelp);
+
 
         String toggleText = LiveRecorder.getInstance().getConfig().getString("help.toggle", "&eSet whether you will be broadcast live (for players).").replace("&", "§");
         TextComponent toggleHelp = new TextComponent("/lr toggle  " + toggleText);

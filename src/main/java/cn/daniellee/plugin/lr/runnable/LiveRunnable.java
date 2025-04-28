@@ -32,7 +32,7 @@ public class LiveRunnable extends BukkitRunnable {
             if (recorder != null && recorder.isValid()) {
                 // 赋予权限
                 List<String> permissions = LiveRecorder.getInstance().getConfig().getStringList("setting.recorder-permission");
-                if (permissions != null && !permissions.isEmpty()) {
+                if (!permissions.isEmpty()) {
                     String command = LiveRecorder.getInstance().getConfig().getString("setting.permission-command", "lp user {recorder} permission set {permission} true");
                     for (String permission : permissions) {
                         if (!recorder.hasPermission(permission)) {
@@ -77,7 +77,7 @@ public class LiveRunnable extends BukkitRunnable {
         // 清理不活跃的
         for (ActivePlayer activePlayer : LiveCore.activePlayers.values()) {
             Player player = Bukkit.getPlayer(activePlayer.getName());
-            if (System.currentTimeMillis() - activePlayer.getLastActive() > inactivityTimeout * 1000 || (!activePlayer.isExternal() && (player == null || !player.isValid()))) {
+            if (System.currentTimeMillis() - activePlayer.getLastActive() > inactivityTimeout * 1000L || (!activePlayer.isExternal() && (player == null || !player.isValid()))) {
                 LiveCore.activePlayers.remove(activePlayer.getName());
             }
         }

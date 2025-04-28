@@ -14,6 +14,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Objects;
+
 public class LiveRecorder extends JavaPlugin {
 
 	private static final String PACKAGE_VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
@@ -38,13 +40,15 @@ public class LiveRecorder extends JavaPlugin {
         if (loadConfig()) {
             getLogger().info(" ");
             getLogger().info(">>>>>>>>>>>>>>>>>>>>>>>> LiveRecorder Loaded <<<<<<<<<<<<<<<<<<<<<<<<");
-            getLogger().info(">>>>> If you encounter any bugs, please contact author's QQ: 768318841 <<<<<");
+            getLogger().info("\u001B[9m>>>>> If you encounter any bugs, please contact author's QQ: 768318841() <<<<<\u001B[0m");
+            getLogger().info(">>>>>>>>>>>>>>>>>>>>>>>> 原作者已经停更 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            getLogger().info(">>>>>此版本已由 https://github.com/3130585774/LiveRecorder 维护更新。<<<<<<");
             getLogger().info(" ");
 
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
-            Bukkit.getPluginCommand("liverecorder").setExecutor(new RecorderCommand());
-            Bukkit.getPluginCommand("liverecorder").setTabCompleter(new RecorderCompleter());
+            Objects.requireNonNull(Bukkit.getPluginCommand("liverecorder")).setExecutor(new RecorderCommand());
+            Objects.requireNonNull(Bukkit.getPluginCommand("liverecorder")).setTabCompleter(new RecorderCompleter());
 
             bungeecord = Bukkit.getServer().spigot().getConfig().getBoolean("settings.bungeecord", false);
 
