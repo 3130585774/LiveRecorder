@@ -5,7 +5,16 @@
 让你的服务器直播管理更加智能、有序！
 
 ---
+## 项目来源
 
+本项目基于以下仓库之一的某个分支，具体是哪个已经懒得考证了：
+
+- https://gitee.com/BukkitPlugin/LiveRecorder
+- https://gitee.com/unlimiter/LiveRecorder
+- https://github.com/HiWorldMC/LiveRecorder
+
+致谢所有原作者。
+---
 ## ✨ 功能亮点
 
 - 开关服务器直播模式
